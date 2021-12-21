@@ -1,6 +1,8 @@
 package com.examproject.kommunalvalg.controller;
 
+import com.examproject.kommunalvalg.model.PoliticalParty;
 import com.examproject.kommunalvalg.payload.MandateDto;
+import com.examproject.kommunalvalg.payload.MandateResponse;
 import com.examproject.kommunalvalg.payload.PoliticalPartyResponse;
 import com.examproject.kommunalvalg.service.MandateService;
 import com.examproject.kommunalvalg.util.AppConstants;
@@ -27,9 +29,14 @@ public class MandateController {
         return new ResponseEntity<>(mandateService.createMandate(mandateDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/politicalparties/{politicalParty_id}/mandates")
-    List<MandateDto> getMandatesByPoliticalPartyId(@PathVariable(value="politicalParty_id") long politicalParty_id) {
-        return mandateService.getMandatesByPoliticalPartyId(politicalParty_id);
+    @GetMapping("/politicalparties/{politicalParty}/mandates")
+    MandateResponse getMandatesByPoliticalPartyId(
+            @PathVariable PoliticalParty politicalParty,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
+        return mandateService.getMandatesByPoliticalParty(politicalParty, pageNo, pageSize, sortBy, sortDir);
     }
 
     @PutMapping("/politicalparties/{politicalPartyId}/mandates/{mandateId}")

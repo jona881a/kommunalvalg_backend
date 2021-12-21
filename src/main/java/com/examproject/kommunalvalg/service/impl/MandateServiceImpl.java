@@ -4,10 +4,17 @@ import com.examproject.kommunalvalg.exception.ResourceNotFoundException;
 import com.examproject.kommunalvalg.model.Mandate;
 import com.examproject.kommunalvalg.model.PoliticalParty;
 import com.examproject.kommunalvalg.payload.MandateDto;
+import com.examproject.kommunalvalg.payload.MandateResponse;
+import com.examproject.kommunalvalg.payload.PoliticalPartyDto;
+import com.examproject.kommunalvalg.payload.PoliticalPartyResponse;
 import com.examproject.kommunalvalg.repository.MandateRepositroy;
 import com.examproject.kommunalvalg.repository.PoliticalPartyRepository;
 import com.examproject.kommunalvalg.service.MandateService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,10 +52,37 @@ public class MandateServiceImpl implements MandateService {
     }
 
     @Override
-    public List<MandateDto> getMandatesByPoliticalPartyId(long politicalParty_id) {
-        List<Mandate> mandates = mandateRepositroy.findMandatesById(politicalParty_id);
+    public MandateResponse getMandatesByPoliticalParty(PoliticalParty politicalParty, int pageNo, int pageSize, String sortBy, String sortDir) {
+        //List<Mandate> mandatesTest = mandateRepositroy.findAllByPoliticalParty(politicalParty);
 
-        return mandates.stream().map(mandate -> mapToDTO(mandate)).collect(Collectors.toList());
+        //Vi laver et sorteringsobject baseret på om sortDir er asc eller desc
+        //Samtidigt bruger vi sortBy til at vide hvilke attribut vi prøver at sortere for
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        //Vi laver et pageRequest med sideantal, sidestørrelse og vores sorteringsrækkefølge
+        Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
+
+        //Pageobject der indeholder vores liste af objecter ud fra de specifikke argumenter vi har lavet
+        //Page<Mandate> mandates = mandateRepositroy.findAll(pageable);
+        Page<Mandate> mandates = mandateRepositroy.findAllByPoliticalParty(politicalParty, pageable);
+
+        //Vi laver en liste af politicalParties fra Page objectet
+        List<Mandate> listOfMandates = mandates.getContent();
+
+        //Vi skal konverterer politicalPartyEntities til DTOs som vi sender til klienten
+        List<MandateDto> content = listOfMandates.stream().map(this::mapToDTO).collect(Collectors.toList());
+
+        MandateResponse mandateResponse = new MandateResponse();
+        mandateResponse.setContent(content);
+        mandateResponse.setPageNo(mandates.getNumber());
+        mandateResponse.setPageSize(mandates.getSize());
+        mandateResponse.setTotalElements(mandates.getTotalElements());
+        mandateResponse.setTotalPages(mandates.getTotalPages());
+        mandateResponse.setLast(mandates.isLast());
+
+        return mandateResponse;
     }
 
 
