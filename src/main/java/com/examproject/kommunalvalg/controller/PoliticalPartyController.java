@@ -1,12 +1,10 @@
 package com.examproject.kommunalvalg.controller;
 
-import com.examproject.kommunalvalg.payload.MandateDto;
 import com.examproject.kommunalvalg.payload.PoliticalPartyResponse;
 import com.examproject.kommunalvalg.service.PoliticalPartyService;
 import com.examproject.kommunalvalg.util.AppConstants;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -28,13 +26,5 @@ public class PoliticalPartyController {
     ) {
         return politicalPartyService.getAllPoliticalParties(pageNo,pageSize, sortBy, sortDir);
     }
-
-    /*
-    @GetMapping("/{id}")
-    public List<MandateDto> getAllMandatesFromSpecificPoliticalParty(@PathVariable long id) {
-        return politicalPartyService.getAllMandatesFromSpecificPoliticalParty(id);
-    }
-
-     */
 
 }

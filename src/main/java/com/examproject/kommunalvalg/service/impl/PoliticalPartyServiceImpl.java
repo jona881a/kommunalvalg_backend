@@ -70,25 +70,6 @@ public class PoliticalPartyServiceImpl implements PoliticalPartyService {
         return politicalPartyResponse;
     }
 
-    /*
-    @Override
-     //Retrieve comments by postId
-        List<Comment> comments = commentRepository.findByPostId(postId);
-
-        //Convert list of comment entities to list of comment dto's
-        return comments.stream().map(comment -> mapToDto(comment)).collect(Collectors.toList());
-    }
-
-
-    @Override
-    public void deleteMandateById(Long id) {
-        Mandate mandate = mandateRepositroy.findById(id).orElseThrow(() -> new ResourceNotFoundException("Mandate", "id", id));
-
-        mandateRepositroy.delete(mandate);
-    }
-
-     */
-
     //Konverterer et Dto object tilbage til dens oprindelige Entity form
     private PoliticalPartyDto mapToDTO(PoliticalParty politicalParty) {
         PoliticalPartyDto politicalPartyDto = modelMapper.map(politicalParty, PoliticalPartyDto.class);

@@ -9,7 +9,4 @@ public interface PoliticalPartyService {
 
     PoliticalPartyResponse getAllPoliticalParties(int pageNo, int pageSize, String sortBy, String sortDir);
 
-    //List<MandateDto> getAllMandatesFromSpecificPoliticalParty(long id);
-
-    //void deleteMandateById(Long id);
 }

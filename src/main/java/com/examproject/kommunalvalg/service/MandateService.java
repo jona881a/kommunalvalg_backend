@@ -1,5 +1,6 @@
 package com.examproject.kommunalvalg.service;
 
+import com.examproject.kommunalvalg.model.Mandate;
 import com.examproject.kommunalvalg.model.PoliticalParty;
 import com.examproject.kommunalvalg.payload.MandateDto;
 import com.examproject.kommunalvalg.payload.MandateResponse;
